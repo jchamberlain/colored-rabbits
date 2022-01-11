@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head> 
+    <title>Colored Rabbits</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+    <form>
+        <p>Set the percentage of requests routed to the blue vs. the green deployment.</p>
+
+        <span>Blue: <span id="percent-blue">100</span>%</span>
+        <input type="range" name="percentGreen" min="0" max="100" step="10" value="0" onChange="setPercentGreen(this.value)">
+        <span>Green: <span id="percent-green">0</span>%</span>
+    </form>
+
+    <form onsubmit="sendMessages(); return false">
+        <input type="number" name="messageCount" id="message-count" min="10" max="1000" step="1" value="100" />
+        <input type="text" name="messageText" id="message-text" placeholder="Message to send..." />
+
+        <input type="submit" value="Send">
+    </form>
+
+
+    <script>
+        function setPercentGreen(value) {
+            document.getElementById('percent-blue').innerHTML = 100 - parseInt(value);
+            document.getElementById('percent-green').innerHTML = value;
+
+            fetch('/green', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({percent: parseInt(value)}),
+            });
+        }
+
+        function sendMessages() {
+            fetch('/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    text: document.getElementById("message-text").value,
+                    count: parseInt(document.getElementById("message-count").value)
+                }),
+            });
+        }
+    </script>
+</body>
+</html>
