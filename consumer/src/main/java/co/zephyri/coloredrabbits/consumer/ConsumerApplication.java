@@ -56,6 +56,10 @@ public class ConsumerApplication {
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(queueName);
         container.setMessageListener(listenerAdapter);
+
+        // On startup, don't have any consumer running.
+        container.setAutoStartup(false);
+
         return container;
     }
 }
