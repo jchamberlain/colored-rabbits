@@ -5,3 +5,14 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+
+  consumer-blue:
+    build: ./consumer
+
+  consumer-green:
+    build: ./consumer
+
+  producer:
+    build: ./producer
+    ports:
+      - 8081:8081

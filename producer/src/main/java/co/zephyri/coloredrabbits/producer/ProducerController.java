@@ -22,7 +22,7 @@ public class ProducerController {
 
     public ProducerController(RabbitTemplate rabbitTemplate, WebClient.Builder builder) {
         this.rabbitTemplate = rabbitTemplate;
-        this.webClient = builder.baseUrl("http://localhost:8080").build();
+        this.webClient = builder.baseUrl("http://consumer-green:8080").build();
     }
 
 
