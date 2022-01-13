@@ -1,5 +1,6 @@
 package co.zephyri.coloredrabbits.consumer;
 
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -51,14 +52,16 @@ public class ConsumerApplication {
     }
 
     @Bean
-    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter, AmqpAdmin amqpAdmin) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(queueName);
         container.setMessageListener(listenerAdapter);
 
-        // On startup, don't have any consumer running.
+        // On startup, don't have any consumer running...
         container.setAutoStartup(false);
+        // ...but still declare queues, exchanges, and bindings.
+        amqpAdmin.initialize();
 
         return container;
     }

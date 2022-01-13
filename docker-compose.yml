@@ -8,11 +8,20 @@ services:
 
   consumer-blue:
     build: ./consumer
+    depends_on:
+      - rabbitmq
+    restart: on-failure
 
   consumer-green:
     build: ./consumer
+    depends_on:
+      - rabbitmq
+    restart: on-failure
 
   producer:
     build: ./producer
+    depends_on:
+      - rabbitmq
+    restart: on-failure
     ports:
-      - 8081:8081
+      - 8080:8080

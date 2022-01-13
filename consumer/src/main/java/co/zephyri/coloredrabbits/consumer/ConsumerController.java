@@ -1,5 +1,6 @@
 package co.zephyri.coloredrabbits.consumer;
 
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -16,16 +17,18 @@ public class ConsumerController {
 
     private final Logger log = LoggerFactory.getLogger(ConsumerController.class);
     private final SimpleMessageListenerContainer container;
+    private final Receiver receiver;
 
     private int maxConsumers = 10;
 
-    public ConsumerController(SimpleMessageListenerContainer container) {
+    public ConsumerController(SimpleMessageListenerContainer container, Receiver receiver) {
         this.container = container;
+        this.receiver = receiver;
     }
 
 
     @PostMapping("/percent-in-service")
-    public ResponseEntity<String> setPercentInService(@RequestBody PercentInServiceBody body) {
+    public ResponseEntity<String> setPercentInService(@RequestBody PercentInService body) {
         log.info(body.toString());
 
         int consumerCount = maxConsumers * body.percent / 100;
@@ -50,7 +53,11 @@ public class ConsumerController {
     }
 
 
+    @GetMapping("/received-counts")
+    public ResponseEntity<Map<String,Integer>> getReceivedCounts() {
+        return ResponseEntity.ok().body(receiver.receivedCounts());
+    }
 
 
-    record PercentInServiceBody(int percent) {}
+    record PercentInService(int percent) {}
 }
